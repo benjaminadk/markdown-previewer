@@ -1,0 +1,80 @@
+//IMPORT RIGHTEOUS FROM GOOGLE FONTS
+@import url('https://fonts.googleapis.com/css?family=Righteous');
+
+//SCSS VARIABLES
+$color1: hsl(196, 95%, 76%);
+$color2: hsl(164, 100%, 87%);
+$font: 'Righteous', Arial, sans-serif;
+
+body {
+background: rgb(10,10,10);  
+}
+
+.title-bar-title {
+  font-family: $font;
+  font-size: 30px;
+  margin-left: 35vw;
+}
+
+.success {
+  background-color: darken($color2,25%)!important;
+  font-family: $font;
+  border-radius: 5px;
+  outline: none;
+}
+
+#editor {
+  height: 84.5vh;
+}
+
+#preview {
+  background-color: #FFFFFF;
+  padding: 5px;
+}
+
+.toolbar {
+  font-family: $font;
+  font-size: 20px;
+  position: relative;
+  padding: 5px 0px 2px 10px;
+  i {}
+    .fa-angle-double-right,.fa-angle-double-left {
+      position: absolute;
+      right: 15px;
+      transform: scale(1.5);
+  }
+}
+
+.editorWrap {
+  height: 90vh;
+  width: 50%;
+  background-color: $color1;
+  .toolbar {
+    background-color: darken($color1,25%); 
+  }
+}
+
+.previewWrap {
+  height: 90vh;
+  width: 50%;
+  overflow: auto;
+  background-color: $color2;
+  .toolbar {
+    background-color: darken($color2,25%); 
+  }
+}
+
+.hide {
+  opacity:0;
+}
+
+.maximized {
+  width: 95vw;
+}
+
+code {
+  background: $color2;
+}
+
+
+

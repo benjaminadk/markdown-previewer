@@ -1,0 +1,221 @@
+marked.setOptions({
+  breaks: true,
+});
+
+const renderer = new marked.Renderer();
+renderer.link = function (href, title, text) {
+  return `<a target="_blank" href="${href}">${text}` + '</a>';
+}
+
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      markdown: placeholder,
+      editorMaximized: false,
+      previewMaximized: false,
+      previewMarkdown: true
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleEditorMaximize = this.handleEditorMaximize.bind(this);
+    this.handlePreviewMaximize = this.handlePreviewMaximize.bind(this);
+    this.handleToggleHtml = this.handleToggleHtml.bind(this);
+  }
+  handleChange  (e)  {
+    this.setState({
+      markdown: e.target.value
+    });
+  }
+  handleEditorMaximize() {
+    this.setState({
+      editorMaximized: !this.state.editorMaximized
+    });
+  }
+  handlePreviewMaximize() {
+    this.setState({
+      previewMaximized: !this.state.previewMaximized
+    });
+  }
+  handleToggleHtml() {
+    this.setState({
+      previewMarkdown: !this.state.previewMarkdown
+    });
+  }
+  
+  render() {
+    const classes = this.state.editorMaximized ?
+          ['editorWrap maximized column medium-12 small-12',
+           'previewWrap hide',
+           ['fa fa-angle-double-left has-tip','fa fa-angle-double-right has-tip']] :
+          this.state.previewMaximized ?
+          ['editorWrap hide',
+           'previewWrap maximized column medium-12 small-12',
+           ['fa fa-angle-double-right has-tip','fa fa-angle-double-right has-tip']] :
+          ['editorWrap column medium-6 small-12',
+           "previewWrap column medium-6 small-12",
+           ['fa fa-angle-double-right has-tip','fa fa-angle-double-left has-tip']];
+    
+    const titles = this.state.editorMaximized ?
+          ['Press to Minimize Editor',""] :
+          this.state.previewMaximized ?
+          ['',"Press to Minimize Preview"] :
+          ['Press to Maximize Editor','Press to Maximize Preview'];
+    
+    
+    return (
+    <div className="rootWrap row">
+        
+        <Title text="Markdown Previewer"
+               icon="devicon-react-original-wordmark"
+               onClick={this.handleToggleHtml}/>
+        
+        <div className={classes[0]}>
+          <Toolbar text="Enter Markdown Here"
+                   mainIcon="fa fa-pencil-square-o"
+                   icon={classes[2][0]}
+                   onClick={this.handleEditorMaximize}
+                   title={titles[0]}/>
+          
+          <Editor markdown={this.state.markdown}
+                  onChange={this.handleChange} />
+        </div>
+        
+        <div className={classes[1]}>
+          <Toolbar text="Here is Your Live Preview"
+                   mainIcon="fa fa-eye"
+                   icon={classes[2][1]}
+                   onClick={this.handlePreviewMaximize}
+                   title={titles[1]}/>
+          
+          <Preview markdown={this.state.markdown}
+                   previewMarkdown={this.state.previewMarkdown}/>
+        </div>
+        </div>
+    );
+  }
+}
+const Title = (props) => {
+  return(
+    <div className="title-bar">
+      <div className="title-bar-right">
+    <span className="title-bar-title"><i className={props.icon}></i>{props.text}<i className={props.icon}></i></span>
+    <button onClick={props.onClick} className="success button">Toggle HTML</button>
+      </div>
+      </div>
+  );
+}
+const Toolbar = (props) => {
+ 
+      return (
+  <div className="toolbar">
+      <i className={props.mainIcon}></i>&nbsp;&nbsp;
+      {props.text}
+      <i onClick={props.onClick} className={props.icon} title={props.title}></i>
+</div> 
+   
+  );
+
+        
+}
+const Editor = (props) => {
+  return (
+  <textarea id="editor"
+    value={props.markdown}
+    onChange={props.onChange}
+    type="text" />
+  )
+}
+
+const Preview = (props) => {
+  const preview = props.previewMarkdown;
+  if(preview){
+  return (
+  <div id='preview' dangerouslySetInnerHTML={{__html: marked(props.markdown, { renderer: renderer })}} />
+  );
+  }
+  else{
+  
+  let html = $("#preview").html();
+  let split = html.split(/\n/g);
+  
+    const final = split.map((line)=>
+                         <p>{line}</p>
+                         );
+   
+    
+    return (
+      <div id="preview">{final}</div>
+    /*  <div id="preview">{split[0]}<br/>{split[1]}<br/>{split[2]}<br/>{split[3]}<br/>{split[4]}<br/>{split[5]}<br/>{split[6]}<br/>{split[7]}<br/>{split[8]}<br/>{split[9]}<br/>{split[10]}<br/>{split[11]}<br/>{split[12]}<br/>{split[13]}<br/>{split[14]}<br/>{split[15]}<br/>{split[16]}<br/>{split[17]}<br/>{split[18]}<br/>{split[19]}<br/>{split[20]}<br/>{split[21]}<br/>{split[22]}<br/>{split[23]}<br/>{split[24]}<br/>{split[25]}<br/>{split[26]}<br/>{split[27]}<br/>{split[28]}<br/>{split[28]}<br/>{split[29]}<br/>{split[30]}<br/>{split[31]}<br/>{split[32]}<br/>{split[33]}<br/>{split[34]}<br/>{split[35]}<br/>{split[36]}<br/>{split[37]}<br/>{split[38]}<br/>{split[39]}<br/>{split[40]}<br/>{split[41]}<br/>{split[42]}<br/>{split[43]}<br/>{split[44]}<br/>{split[45]}<br/>{split[46]}<br/>{split[47]}<br/>{split[48]}<br/>{split[49]}<br/>{split[50]}<br/>{split[51]}<br/>{split[52]}<br/>{split[53]}<br/>{split[54]}<br/>{split[55]}<br/>{split[56]}<br/>{split[57]}<br/>{split[58]}<br/>{split[59]}<br/>{split[60]}<br/>{split[61]}<br/>{split[62]}<br/>{split[63]}<br/>{split[64]}<br/></div>*/
+    );
+  }
+}
+
+const placeholder = 
+`# Markdown Previewer!
+
+## Two hash tag subheader
+
+### This is three...
+
+#### Cuatro...
+
+##### Cinco...
+
+###### Six...those are the headers...now for more...
+  
+To do single-line code use  \`<div> 2 backticks </div>\`
+
+\`\`\`
+// this is multi-line code:
+
+function benCooler() {
+ben.cool++;
+benCooler();
+}
+\`\`\`
+
+Emojis? &#128513;&#128519;be good!&#128520;or not🤸🏿‍♂️
+Dingbats? &#9749;&#9754;&#9745; coffee sound good
+
+You can also make text **bold** or _italic_ or **_both!_**
+
+You can also ~~Ben is a LOSER~~.
+
+There's also links such as [one to my facebook web dev page](https://www.facebook.com/benjaminadk), and
+
+> To Ben or not to Ben, that tis' the question
+
+---
+
+Tables are Easy:
+
+Person| Cool Bool | Awesome Bool
+------------ | ------------- | ------------- 
+benjaminadk | true | true
+you | true | false
+
+***
+
+- Lists of stuff
+  - Bulleted
+     - Just Indent
+        - Easy Peasy
+
+
+1. Numbered Lists
+1. Use just 1s if you want! 
+1. dashes
+- asterisks.
+* Next we have images
+
+![Images of Me](https://s3-us-west-2.amazonaws.com/s.cdpn.io/1216298/IMG_0156.JPG)
+
+<p id='ben' style='border:5px outset #cecece;background:pink;'onclick='document.getElementById("ben").style.setProperty("transform","rotate(180deg)");'>Inline HTML/CSS/JS WORK TOO CLICK ME....BIZZARE!!!</p>
+
+### You Tube Links With Photo
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/v6rGkOuEUP4/0.jpg)](https://www.youtube.com/watch?v=v6rGkOuEUP4)
+`
+
+
+ReactDOM.render(<App />, document.getElementById('root'));
